@@ -6,49 +6,18 @@ import com.destroystokyo.paper.block.TargetBlockInfo;
 import com.destroystokyo.paper.block.TargetBlockInfo.FluidMode;
 import com.destroystokyo.paper.entity.TargetEntityInfo;
 import com.destroystokyo.paper.profile.PlayerProfile;
-import java.net.InetSocketAddress;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import io.papermc.paper.entity.LookAnchor;
+import io.papermc.paper.entity.TeleportFlag;
 import net.kyori.adventure.identity.Identity;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.util.TriState;
 import net.md_5.bungee.api.chat.BaseComponent;
-import org.bukkit.Chunk;
-import org.bukkit.DyeColor;
-import org.bukkit.Effect;
-import org.bukkit.EntityEffect;
-import org.bukkit.FluidCollisionMode;
-import org.bukkit.GameMode;
-import org.bukkit.Instrument;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.Note;
-import org.bukkit.Particle;
-import org.bukkit.Server;
-import org.bukkit.Sound;
-import org.bukkit.SoundCategory;
-import org.bukkit.Statistic;
-import org.bukkit.WeatherType;
-import org.bukkit.World;
-import org.bukkit.WorldBorder;
+import org.bukkit.*;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.advancement.AdvancementProgress;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.PistonMoveReaction;
-import org.bukkit.block.Sign;
+import org.bukkit.block.*;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.conversations.Conversation;
 import org.bukkit.conversations.ConversationAbandonedEvent;
@@ -61,16 +30,8 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerResourcePackStatusEvent.Status;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
-import org.bukkit.inventory.EntityEquipment;
-import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.InventoryView;
+import org.bukkit.inventory.*;
 import org.bukkit.inventory.InventoryView.Property;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.MainHand;
-import org.bukkit.inventory.Merchant;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.map.MapView;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.permissions.Permission;
@@ -82,9 +43,15 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.util.BoundingBox;
+import org.bukkit.util.Consumer;
 import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.net.InetSocketAddress;
+import java.util.*;
 
 public class FakePlayer implements Player {
 	private final ItemStack inHand;
@@ -385,6 +352,16 @@ public class FakePlayer implements Player {
 	@Override
 	public boolean setWindowProperty(Property prop, int value) {
 		return false;
+	}
+
+	@Override
+	public int getEnchantmentSeed() {
+		return 0;
+	}
+
+	@Override
+	public void setEnchantmentSeed(int seed) {
+
 	}
 
 	@Override
@@ -917,6 +894,21 @@ public class FakePlayer implements Player {
 	}
 
 	@Override
+	public @NotNull Sound getSwimSound() {
+		return null;
+	}
+
+	@Override
+	public @NotNull Sound getSwimSplashSound() {
+		return null;
+	}
+
+	@Override
+	public @NotNull Sound getSwimHighSpeedSplashSound() {
+		return null;
+	}
+
+	@Override
 	public boolean isInsideVehicle() {
 
 		return false;
@@ -964,6 +956,16 @@ public class FakePlayer implements Player {
 	@Override
 	public boolean isCustomNameVisible() {
 
+		return false;
+	}
+
+	@Override
+	public void setVisibleByDefault(boolean visible) {
+
+	}
+
+	@Override
+	public boolean isVisibleByDefault() {
 		return false;
 	}
 
@@ -1146,6 +1148,11 @@ public class FakePlayer implements Player {
 	}
 
 	@Override
+	public <T extends Projectile> @NotNull T launchProjectile(@NotNull Class<? extends T> projectile, @org.jetbrains.annotations.Nullable Vector velocity, @org.jetbrains.annotations.Nullable Consumer<T> function) {
+		return null;
+	}
+
+	@Override
 	public boolean isConversing() {
 
 		return false;
@@ -1319,6 +1326,11 @@ public class FakePlayer implements Player {
 	}
 
 	@Override
+	public void kick() {
+
+	}
+
+	@Override
 	public void kick(@Nullable Component component) {
 
 	}
@@ -1424,23 +1436,15 @@ public class FakePlayer implements Player {
 	}
 
 	@Override
-	public void sendSignChange(@Nonnull Location location,
-							   @Nullable List<Component> list) throws IllegalArgumentException {
+	public void sendSignChange(@Nonnull @NotNull Location location,
+							   @Nullable @org.jetbrains.annotations.Nullable List<? extends Component> list) throws IllegalArgumentException {
 
 	}
 
 	@Override
-	public void sendSignChange(@Nonnull Location location,
-							   @Nullable List<Component> list,
-							   @Nonnull DyeColor dyeColor) throws IllegalArgumentException {
-
-	}
-
-	@Override
-	public void sendSignChange(@Nonnull Location location,
-							   @Nullable List<Component> list,
-							   @Nonnull DyeColor dyeColor, boolean bl)
-			throws IllegalArgumentException {
+	public void sendSignChange(@Nonnull @NotNull Location location,
+							   @Nullable @org.jetbrains.annotations.Nullable List<? extends Component> list,
+							   @Nonnull @NotNull DyeColor dyeColor) throws IllegalArgumentException {
 
 	}
 
@@ -1451,6 +1455,21 @@ public class FakePlayer implements Player {
 
 	@Override
 	public void sendMap(MapView map) {
+
+	}
+
+	@Override
+	public void showWinScreen() {
+
+	}
+
+	@Override
+	public boolean hasSeenWinScreen() {
+		return false;
+	}
+
+	@Override
+	public void setHasSeenWinScreen(boolean hasSeenWinScreen) {
 
 	}
 
@@ -1709,6 +1728,21 @@ public class FakePlayer implements Player {
 	}
 
 	@Override
+	public @org.jetbrains.annotations.Nullable Location getLastDeathLocation() {
+		return null;
+	}
+
+	@Override
+	public void setLastDeathLocation(@org.jetbrains.annotations.Nullable Location location) {
+
+	}
+
+	@Override
+	public @org.jetbrains.annotations.Nullable Firework fireworkBoost(@NotNull ItemStack fireworkItemStack) {
+		return null;
+	}
+
+	@Override
 	public Location getBedSpawnLocation() {
 
 		return null;
@@ -1733,6 +1767,16 @@ public class FakePlayer implements Player {
 	@Override
 	public void setAllowFlight(boolean flight) {
 
+	}
+
+	@Override
+	public void setFlyingFallDamage(@NotNull TriState flyingFallDamage) {
+
+	}
+
+	@Override
+	public @NotNull TriState hasFlyingFallDamage() {
+		return null;
 	}
 
 	@Override
@@ -2149,8 +2193,18 @@ public class FakePlayer implements Player {
 	}
 
 	@Override
+	public void playSound(@NotNull Entity entity, @NotNull String sound, float volume, float pitch) {
+
+	}
+
+	@Override
 	public void playSound(@NotNull Entity entity, @NotNull Sound sound,
 						  @NotNull SoundCategory category, float volume, float pitch) {
+
+	}
+
+	@Override
+	public void playSound(@NotNull Entity entity, @NotNull String sound, @NotNull SoundCategory category, float volume, float pitch) {
 
 	}
 
@@ -2198,6 +2252,11 @@ public class FakePlayer implements Player {
 	}
 
 	@Override
+	public void stopSound(@NotNull SoundCategory category) {
+
+	}
+
+	@Override
 	public void stopAllSounds() {
 
 	}
@@ -2223,7 +2282,17 @@ public class FakePlayer implements Player {
 	}
 
 	@Override
+	public void sendBlockChanges(@NotNull Collection<BlockState> blocks, boolean suppressLightUpdates) {
+
+	}
+
+	@Override
 	public void sendBlockDamage(@Nonnull Location location, float f) {
+
+	}
+
+	@Override
+	public void sendBlockDamage(@NotNull Location loc, float progress, int destroyerIdentity) {
 
 	}
 
@@ -2235,6 +2304,16 @@ public class FakePlayer implements Player {
 
 	@Override
 	public void sendEquipmentChange(LivingEntity livingEntity,  EquipmentSlot equipmentSlot,  ItemStack itemStack) {
+
+	}
+
+	@Override
+	public void sendEquipmentChange(@NotNull LivingEntity entity, @NotNull Map<EquipmentSlot, ItemStack> items) {
+
+	}
+
+	@Override
+	public void sendSignChange(@NotNull Location loc, @org.jetbrains.annotations.Nullable List<? extends Component> lines, @NotNull DyeColor dyeColor, boolean hasGlowingText) throws IllegalArgumentException {
 
 	}
 
@@ -2357,6 +2436,46 @@ public class FakePlayer implements Player {
 	}
 
 	@Override
+	public @org.jetbrains.annotations.Nullable Sound getHurtSound() {
+		return null;
+	}
+
+	@Override
+	public @org.jetbrains.annotations.Nullable Sound getDeathSound() {
+		return null;
+	}
+
+	@Override
+	public @NotNull Sound getFallDamageSound(int fallHeight) {
+		return null;
+	}
+
+	@Override
+	public @NotNull Sound getFallDamageSoundSmall() {
+		return null;
+	}
+
+	@Override
+	public @NotNull Sound getFallDamageSoundBig() {
+		return null;
+	}
+
+	@Override
+	public @NotNull Sound getDrinkingSound(@NotNull ItemStack itemStack) {
+		return null;
+	}
+
+	@Override
+	public @NotNull Sound getEatingSound(@NotNull ItemStack itemStack) {
+		return null;
+	}
+
+	@Override
+	public boolean canBreatheUnderwater() {
+		return false;
+	}
+
+	@Override
 	public double getAbsorptionAmount() {
 		// TODO Auto-generated method stub
 		return 0;
@@ -2377,6 +2496,61 @@ public class FakePlayer implements Player {
 	@Override
 	public void setRotation(float yaw, float pitch) {
 		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public boolean teleport(@NotNull Location location, @NotNull TeleportCause cause, @NotNull TeleportFlag @NotNull ... teleportFlags) {
+		return false;
+	}
+
+	@Override
+	public void lookAt(double x, double y, double z, @NotNull LookAnchor playerAnchor) {
+
+	}
+
+	@Override
+	public void lookAt(@NotNull Entity entity, @NotNull LookAnchor playerAnchor, @NotNull LookAnchor entityAnchor) {
+
+	}
+
+	@Override
+	public void showElderGuardian(boolean silent) {
+
+	}
+
+	@Override
+	public int getWardenWarningCooldown() {
+		return 0;
+	}
+
+	@Override
+	public void setWardenWarningCooldown(int cooldown) {
+
+	}
+
+	@Override
+	public int getWardenTimeSinceLastWarning() {
+		return 0;
+	}
+
+	@Override
+	public void setWardenTimeSinceLastWarning(int time) {
+
+	}
+
+	@Override
+	public int getWardenWarningLevel() {
+		return 0;
+	}
+
+	@Override
+	public void setWardenWarningLevel(int warningLevel) {
+
+	}
+
+	@Override
+	public void increaseWardenWarningLevel() {
 
 	}
 
@@ -2508,6 +2682,11 @@ public class FakePlayer implements Player {
 	@Override
 	public Location getPotentialBedLocation() {
 		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public @org.jetbrains.annotations.Nullable FishHook getFishHook() {
 		return null;
 	}
 
@@ -2648,6 +2827,11 @@ public class FakePlayer implements Player {
 	}
 
 	@Override
+	public @org.jetbrains.annotations.Nullable BlockFace getTargetBlockFace(int maxDistance, @NotNull FluidCollisionMode fluidMode) {
+		return null;
+	}
+
+	@Override
 	public TargetBlockInfo getTargetBlockInfo(int arg0, FluidMode arg1) {
 		// TODO Auto-generated method stub
 		return null;
@@ -2662,6 +2846,11 @@ public class FakePlayer implements Player {
 	@Override
 	public TargetEntityInfo getTargetEntityInfo(int arg0, boolean arg1) {
 		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public @org.jetbrains.annotations.Nullable RayTraceResult rayTraceEntities(int maxDistance, boolean ignoreBlocks) {
 		return null;
 	}
 
@@ -2696,6 +2885,11 @@ public class FakePlayer implements Player {
 	}
 
 	@Override
+	public void setArrowsInBody(int count, boolean fireEvent) {
+
+	}
+
+	@Override
 	public int getBeeStingerCooldown() {
 		return 0;
 	}
@@ -2724,6 +2918,41 @@ public class FakePlayer implements Player {
 	@Override
 	public void setHurtDirection(float arg0) {
 		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void knockback(double strength, double directionX, double directionZ) {
+
+	}
+
+	@Override
+	public void broadcastSlotBreak(@NotNull EquipmentSlot slot) {
+
+	}
+
+	@Override
+	public void broadcastSlotBreak(@NotNull EquipmentSlot slot, @NotNull Collection<Player> players) {
+
+	}
+
+	@Override
+	public @NotNull ItemStack damageItemStack(@NotNull ItemStack stack, int amount) {
+		return null;
+	}
+
+	@Override
+	public void damageItemStack(@NotNull EquipmentSlot slot, int amount) {
+
+	}
+
+	@Override
+	public float getBodyYaw() {
+		return 0;
+	}
+
+	@Override
+	public void setBodyYaw(float bodyYaw) {
 
 	}
 
@@ -2767,6 +2996,11 @@ public class FakePlayer implements Player {
 	public SpawnReason getEntitySpawnReason() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public boolean isUnderWater() {
+		return false;
 	}
 
 	@Override
@@ -2883,6 +3117,16 @@ public class FakePlayer implements Player {
 	}
 
 	@Override
+	public void addAdditionalChatCompletions(@NotNull Collection<String> completions) {
+
+	}
+
+	@Override
+	public void removeAdditionalChatCompletions(@NotNull Collection<String> completions) {
+
+	}
+
+	@Override
 	public @Nonnull Set<Player> getTrackedPlayers() {
 		return null;
 	}
@@ -2894,6 +3138,16 @@ public class FakePlayer implements Player {
 
 	@Override
 	public boolean isInPowderedSnow() {
+		return false;
+	}
+
+	@Override
+	public boolean collidesAt(@NotNull Location location) {
+		return false;
+	}
+
+	@Override
+	public boolean wouldCollideUsing(@NotNull BoundingBox boundingBox) {
 		return false;
 	}
 
@@ -2966,6 +3220,21 @@ public class FakePlayer implements Player {
 	@Override
 	public void hideTitle() {
 		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void addCustomChatCompletions(@NotNull Collection<String> completions) {
+
+	}
+
+	@Override
+	public void removeCustomChatCompletions(@NotNull Collection<String> completions) {
+
+	}
+
+	@Override
+	public void setCustomChatCompletions(@NotNull Collection<String> completions) {
 
 	}
 
@@ -3124,5 +3393,15 @@ public class FakePlayer implements Player {
 	public void updateTitle(Title arg0) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public @NotNull TriState getFrictionState() {
+		return null;
+	}
+
+	@Override
+	public void setFrictionState(@NotNull TriState state) {
+
 	}
 }
