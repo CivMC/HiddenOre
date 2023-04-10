@@ -121,8 +121,6 @@ I'm probably missing some other details but that's it for now.
 
 ### Feature Augment List:
 
-**v2.1.0** Updated to Minecraft 1.19.4
-
 **v2.0.0** Updated to Minecraft 1.18
 
 **v1.6.0** Generaly update to 1.14.4. Thanks Maxopoly!
